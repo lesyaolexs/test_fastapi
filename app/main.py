@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import Depends, FastAPI
+from pydantic import NonNegativeInt
 from sqlalchemy.orm import Session
 
 from app import crud
@@ -17,7 +18,9 @@ def healthcheck() -> str:
 
 @app.get("/users", response_model=List[DBUser])
 async def get_users(
-    offset: int = 0, limit: int = 100, db: Session = Depends(get_db)
+    offset: NonNegativeInt = 0,
+    limit: NonNegativeInt = 100,
+    db: Session = Depends(get_db),
 ) -> List[DBUser]:
     users = crud.get_users(db, offset=offset, limit=limit)
     return users
