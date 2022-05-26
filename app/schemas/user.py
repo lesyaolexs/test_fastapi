@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -14,3 +15,10 @@ class PatchUser(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     birthday: Optional[date]
+
+
+class DBUser(User):
+    id: UUID
+
+    class Config:
+        orm_mode = True
