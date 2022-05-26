@@ -1,10 +1,12 @@
 from typing import List
 
 from fastapi import Depends, FastAPI
+from pydantic import NonNegativeInt
 from sqlalchemy.orm import Session
 
+from app import crud
 from app.database import get_db
-from app.schemas.user import PatchUser, User
+from app.schemas.user import DBUser, PatchUser, User
 
 app = FastAPI()
 
@@ -14,9 +16,14 @@ def healthcheck() -> str:
     return "OK"
 
 
-@app.get("/users", response_model=List[User])
-async def get_users(db: Session = Depends(get_db)) -> List[User]:
-    ...
+@app.get("/users", response_model=List[DBUser])
+async def get_users(
+    offset: NonNegativeInt = 0,
+    limit: NonNegativeInt = 100,
+    db: Session = Depends(get_db),
+) -> List[DBUser]:
+    users = crud.get_users(db, offset=offset, limit=limit)
+    return users
 
 
 @app.get("/users/{user_id}", response_model=User)
