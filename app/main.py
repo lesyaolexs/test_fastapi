@@ -42,9 +42,9 @@ async def get_user(user_id: UUID) -> User:
     return user
 
 
-@app.post("/users", response_model=User)
-async def create_user(user: User) -> User:
-    ...
+@app.post("/users", response_model=DBUser)
+async def create_user(user: User) -> DBUser:
+    return await crud.create_user(user)
 
 
 @app.patch("/users/{user_id}", response_model=User)
