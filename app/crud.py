@@ -42,3 +42,11 @@ async def update_user(user_id: UUID, user: PatchUser) -> Optional[DBUser]:
     await db.execute(query)
 
     return await get_user(user_id)
+
+
+async def delete_user(user_id: UUID) -> Optional[DBUser]:
+    query = sqlalchemy.delete(modelsUser).where(modelsUser.id == user_id)
+    user = await get_user(user_id)
+    if user:
+        await db.execute(query)
+    return user

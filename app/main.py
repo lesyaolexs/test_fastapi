@@ -56,6 +56,10 @@ async def update_user(user_id: UUID, user: PatchUser) -> User:
     return updated_user
 
 
-@app.delete("/users/{user_id}", response_model=User)
-async def delete_user(user_id: str) -> User:
-    ...
+@app.delete("/users/{user_id}", response_model=DBUser)
+async def delete_user(user_id: UUID) -> User:
+    deleted_user = await crud.delete_user(user_id)
+
+    if deleted_user is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return deleted_user
