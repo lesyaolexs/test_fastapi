@@ -84,3 +84,17 @@ def test_update_user(client):
     assert response.ok
     request_json["id"] = "bfde8bae-5b25-495e-9e87-37ab1695f5ae"
     assert request_json == response_json
+
+
+def test_delete_user(client):
+    expected_response = {
+        "id": "bfde8bae-5b25-495e-9e87-37ab1695f5ae",
+        "first_name": "First name Updated",
+        "last_name": "Last name",
+        "birthday": "2000-01-01",
+    }
+    response = client.delete("/users/bfde8bae-5b25-495e-9e87-37ab1695f5ae")
+    response_json = response.json()
+
+    assert response.ok
+    assert expected_response == response_json
