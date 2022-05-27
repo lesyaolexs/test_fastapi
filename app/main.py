@@ -47,9 +47,13 @@ async def create_user(user: User) -> DBUser:
     return await crud.create_user(user)
 
 
-@app.patch("/users/{user_id}", response_model=User)
-async def update_user(user_id: str, user: PatchUser) -> User:
-    ...
+@app.patch("/users/{user_id}", response_model=DBUser)
+async def update_user(user_id: UUID, user: PatchUser) -> User:
+    updated_user = await crud.update_user(user_id, user)
+
+    if updated_user is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return updated_user
 
 
 @app.delete("/users/{user_id}", response_model=User)

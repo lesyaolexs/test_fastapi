@@ -68,3 +68,19 @@ def test_create_user(client):
     response_json = response.json()
     assert response_json.pop("id")
     assert request_json == response_json
+
+
+def test_update_user(client):
+    request_json = {
+        "first_name": "First name Updated",
+        "last_name": "Last name",
+        "birthday": "2000-01-01",
+    }
+    response = client.patch(
+        "/users/bfde8bae-5b25-495e-9e87-37ab1695f5ae", json=request_json
+    )
+    response_json = response.json()
+
+    assert response.ok
+    request_json["id"] = "bfde8bae-5b25-495e-9e87-37ab1695f5ae"
+    assert request_json == response_json
