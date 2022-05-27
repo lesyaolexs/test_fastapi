@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import NonNegativeInt
 
 from app import crud
@@ -30,13 +30,16 @@ def healthcheck() -> str:
 async def get_users(
     offset: NonNegativeInt = 0, limit: NonNegativeInt = 100
 ) -> List[DBUser]:
-    users = await crud.get_users(offset=offset, limit=limit)
-    return users
+    return await crud.get_users(offset=offset, limit=limit)
 
 
-@app.get("/users/{user_id}", response_model=User)
+@app.get("/users/{user_id}", response_model=DBUser)
 async def get_user(user_id: UUID) -> User:
-    ...
+    user = await crud.get_user(user_id=user_id)
+
+    if user is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return user
 
 
 @app.post("/users", response_model=User)
