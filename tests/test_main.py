@@ -54,3 +54,17 @@ def test_user_not_valid(client):
     response = client.get("/users/labuda-labuda")
 
     assert response.status_code == 422
+
+
+def test_create_user(client):
+    request_json = {
+        "first_name": "First name",
+        "last_name": "Last name",
+        "birthday": "2000-01-01",
+    }
+    response = client.post("/users", json=request_json)
+
+    assert response.ok
+    response_json = response.json()
+    assert response_json.pop("id")
+    assert request_json == response_json

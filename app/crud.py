@@ -1,16 +1,31 @@
+from typing import List, Optional
 from uuid import UUID
 
 import sqlalchemy
 
 from app.database import db
-from app.models.user import User
+from app.models.user import User as modelsUser
+from app.schemas.user import DBUser
+from app.schemas.user import User as schemasUser
 
 
-async def get_users(offset: int = 0, limit: int = 100):
-    query = sqlalchemy.select(User).offset(offset).limit(limit)
-    return await db.fetch_all(query=query)
+async def get_users(offset: int = 0, limit: int = 100) -> List[DBUser]:
+    query = sqlalchemy.select(modelsUser).offset(offset).limit(limit)
+    users = await db.fetch_all(query=query)
+    return [DBUser.parse_obj(user) for user in users]
 
 
-async def get_user(user_id: UUID):
-    query = sqlalchemy.select(User).where(User.id == user_id)
-    return await db.fetch_one(query=query)
+async def get_user(user_id: UUID) -> Optional[DBUser]:
+    query = sqlalchemy.select(modelsUser).where(modelsUser.id == user_id)
+    user = await db.fetch_one(query=query)
+    if user:
+        return DBUser.parse_obj(user)
+    return None
+
+
+async def create_user(user: schemasUser) -> DBUser:
+    query = sqlalchemy.insert(modelsUser).values(
+        first_name=user.first_name, last_name=user.last_name, birthday=user.birthday
+    )
+    last_record_id = await db.execute(query)
+    return DBUser.parse_obj({**user.dict(), "id": last_record_id})
