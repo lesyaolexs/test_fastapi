@@ -14,6 +14,5 @@ RUN poetry install --no-dev
 COPY ./alembic/  alembic/
 COPY ./alembic.ini .
 COPY ./app app/
-COPY ./.env .
 
 EXPOSE 8000
