@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import NonNegativeInt
 
@@ -63,3 +64,7 @@ async def delete_user(user_id: UUID) -> User:
     if deleted_user is None:
         raise HTTPException(status_code=404, detail="Item not found")
     return deleted_user
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
