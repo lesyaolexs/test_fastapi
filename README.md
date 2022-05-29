@@ -1,9 +1,17 @@
-#Test FastAPI
-To run fast API execute command:
+# Test FastAPI
+
+## Requirements
+- docker
+- docker-compose
+
+## Run web service 
+Execute command:
 ```
 DB_USER=user DB_PASS=mysecretpassword DB_NAME=postgres docker-compose up web
+
 ```
-To run tests execute command:
+## Run tests
+Execute command:
 ```
 docker-compose --env-file ./.env.test up test
 ```
