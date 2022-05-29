@@ -87,7 +87,7 @@ def test_update_user(client):
 
 
 def test_delete_user(client):
-    expected_response = {
+    delete_response = {
         "id": "bfde8bae-5b25-495e-9e87-37ab1695f5ae",
         "first_name": "First name Updated",
         "last_name": "Last name",
@@ -97,4 +97,4 @@ def test_delete_user(client):
     response_json = response.json()
 
     assert response.ok
-    assert expected_response == response_json
+    assert delete_response == response_json
