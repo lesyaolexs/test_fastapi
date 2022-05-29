@@ -14,7 +14,7 @@ services:
       context: .
       args:
         ENV: prod
-    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "sleep 10 && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     env_file:
       - .env
     ports:
@@ -41,7 +41,7 @@ services:
         ENV: test
     volumes:
       - ./tests:/app/tests
-    command: bash -c "alembic upgrade head && pytest -vv"
+    command: bash -c "sleep 10 && alembic upgrade head && pytest -vv"
     env_file:
       - .env.test
     depends_on:
